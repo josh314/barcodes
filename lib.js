@@ -1,3 +1,13 @@
+
+//upc from sku utility function
+const ehskuPattern = /^EH-([0-9]{8,})-(?:[0-9]+)$/
+function getUpcFromEhsku(ehsku) {
+	const match = ehsku.match(ehskuPattern);
+	if(match)
+		return match[1];
+}
+exports.getUpcFromEhsku = getUpcFromEhsku;
+
 function isNumeric(x) { 
 	var numbers=".0123456789";
 	// is x a String or a character? 
@@ -39,6 +49,11 @@ var Msg = new String();
 			UPCEString = UPCE.substring(1, 7);
 			break;
 			
+			case 12:
+			return UPCE;
+
+			default:
+			return '';
 		} //End Select
 
 		// break up the string into its 6 individual digits
