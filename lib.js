@@ -18,7 +18,7 @@ function isNumeric(x) {
 	} 
 } 
 
-function ConvertUPCE2A(UPCE){
+function convertUpcE2A(UPCE){
 
 var UPCEString = new String();
 var ManufacturerNumber = new String();
@@ -40,7 +40,7 @@ var Msg = new String();
 			break;
 			
 		} //End Select
-		console.log(UPCEString)
+
 		// break up the string into its 6 individual digits
 		var Digit1 = UPCEString.substr(0, 1);
 		var Digit2 = UPCEString.substr(1, 1);
@@ -91,7 +91,7 @@ var Msg = new String();
 		return '';//TODO: handle error
 	}
 } //End Function
-exports.ConvertUPCE2A = ConvertUPCE2A;
+exports.convertUpcE2A = convertUpcE2A;
 
 function CalcCheckDigit(strMsg){
 	// calculate the check digit - note UPCE and UPCA check digits are the same
