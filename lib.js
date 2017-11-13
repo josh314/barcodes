@@ -1,6 +1,6 @@
 
 //upc from sku utility function
-const ehskuPattern = /^EH-([0-9]{8,})-(?:[0-9]+)$/
+const ehskuPattern = /^EH-([0-9]{8,})-([0-9]+)$/
 function getUpcFromEhsku(ehsku) {
 	const match = ehsku.match(ehskuPattern);
 	if(match)
@@ -8,10 +8,30 @@ function getUpcFromEhsku(ehsku) {
 }
 exports.getUpcFromEhsku = getUpcFromEhsku;
 
+// get both upc and pack quantity from ehsku
+function parseEhsku(ehsku) {
+	const match = ehsku.match(ehskuPattern);
+	if(match) {
+		return [match[1], match[2]];// return [upc, packQuantity]
+	}
+}
+exports.parseEhsku = parseEhsku;
+
+// converts UPCs to EHSKUs
+const upcPattern = /^[0-9]+$/; 
+function getEhskuFromUpc(upc, kitQuantity=1) {
+	if (upcPattern.test(upc))
+		return `EH-${upc}-${kitQuantity}`;
+	else
+		return null;
+};
+exports.getEhskuFromUpc = getEhskuFromUpc;
+
+
 function isNumeric(x) { 
 	var numbers=".0123456789";
 	// is x a String or a character? 
-	if(x.length>1) { 
+	if(x && x.length>1) { 
 		// remove negative sign 
 		x=Math.abs(x)+""; 
 		for(j=0;j<x.length;j++) { 
