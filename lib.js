@@ -17,6 +17,11 @@ function parseEhsku(ehsku) {
 }
 exports.parseEhsku = parseEhsku;
 
+function isEhskuFormat(s) {
+	return ehskuPattern.test(s);
+}
+exports.isEhskuFormat = isEhskuFormat;
+
 // converts UPCs to EHSKUs
 const upcPattern = /^[0-9]+$/; 
 function getEhskuFromUpc(upc, kitQuantity=1) {
@@ -47,6 +52,12 @@ function isNumeric(x) {
 		return false; 
 	} 
 } 
+
+const upcE = /^[0-9]{8}$/;
+function isUpcE(upc) {
+	return upcE.test(upc);
+}
+exports.isUpcE = isUpcE;
 
 function convertUpcE2A(UPCE){
 
