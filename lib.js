@@ -6,7 +6,7 @@ function getUpcFromEhsku(ehsku) {
 	if(match)
 		return match[1];
 }
-exports.getUpcFromEhsku = getUpcFromEhsku;
+
 
 // get both upc and pack quantity from ehsku
 function parseEhsku(ehsku) {
@@ -15,12 +15,12 @@ function parseEhsku(ehsku) {
 		return [match[1], match[2]];// return [upc, packQuantity]
 	}
 }
-exports.parseEhsku = parseEhsku;
+
 
 function isEhskuFormat(s) {
 	return ehskuPattern.test(s);
 }
-exports.isEhskuFormat = isEhskuFormat;
+
 
 // converts UPCs to EHSKUs
 const upcPattern = /^[0-9]+$/; 
@@ -30,7 +30,7 @@ function getEhskuFromUpc(upc, kitQuantity=1) {
 	else
 		return null;
 };
-exports.getEhskuFromUpc = getEhskuFromUpc;
+
 
 
 function isNumeric(x) { 
@@ -57,7 +57,7 @@ const upcE = /^[0-9]{8}$/;
 function isUpcE(upc) {
 	return upcE.test(upc);
 }
-exports.isUpcE = isUpcE;
+
 
 function convertUpcE2A(UPCE){
 
@@ -130,16 +130,16 @@ var Msg = new String();
 
 		// put the number system digit "0" together with the manufacturer code and Item number
 		Msg = Msg.concat("0", ManufacturerNumber, ItemNumber);
-		CheckChar = CalcCheckDigit(Msg);
+		CheckChar = calculateCheckDigit(Msg);
 		return(Msg + CheckChar);	// put the pieces together and return
 	} //End If is numeric
 	else {
 		return '';//TODO: handle error
 	}
 } //End Function
-exports.convertUpcE2A = convertUpcE2A;
 
-function CalcCheckDigit(strMsg){
+
+function calculateCheckDigit(strMsg){
 	// calculate the check digit - note UPCE and UPCA check digits are the same
 	var Check = 0;            // initialize the check digit value
 	for(var X = 1; X <= 11; X++){
@@ -168,4 +168,25 @@ function isOdd(y) {
 
 function mod(divisee,base) {
 	return Math.round(divisee - (Math.floor(divisee/base)*base));
+}
+
+function normalizeUpc(upc, opts={}) {
+	if (opts.checkDigit) {
+		upc = `${upc}${calculateCheckDigit(upc)}`;
+	}
+	if (opts.trim) {
+		upc = upc.slice(opts.trim,upc.length);
+	}
+	return upc;
+}
+
+module.exports = {
+	getUpcFromEhsku: getUpcFromEhsku,
+	parseEhsku: parseEhsku,
+	isEhskuFormat: isEhskuFormat,
+	getEhskuFromUpc: getEhskuFromUpc,
+	isUpcE: isUpcE,
+	convertUpcE2A: convertUpcE2A,
+	calculateCheckDigit: calculateCheckDigit,
+	normalizeUpc: normalizeUpc,
 }
