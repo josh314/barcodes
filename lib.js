@@ -225,9 +225,7 @@ function normalizeUpc(upc, opts={}) {
 // Checks if the barcode includes a check digit
 function validateCheckDigit(barcode) {
 	const lastIdx = barcode.length-1;
-	const lastChar = barcode[lastIdx];
-	const base = barcode.slice(0, lastIdx);
-	return calculateCheckDigit(base)==lastChar;// use == since we are comparing a string to a number
+	return calculateCheckDigit(barcode.slice(0, lastIdx))==barcode[lastIdx];// use == since we are comparing a string to a number
 }
 
 module.exports = {
