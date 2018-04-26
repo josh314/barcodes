@@ -181,6 +181,8 @@ function charFromCharCode (charCode) {
 //     check_digit = -totes % 10#Check digit is the remainder after subtracting above sum from nearest (larger) multiple of ten.
 //     return check_digit
 
+
+// This should work for all types of barcode standards
 function calculateCheckDigit(upc) {
 	upc = upc.split('').reverse().join('');
 	let total = 0;
@@ -193,7 +195,7 @@ function calculateCheckDigit(upc) {
 		}
 	}
   //Check digit is the remainder after subtracting above sum from nearest (larger or equal) multiple of ten.
-	if(parseInt(total/10)===total/10) {
+	if(parseInt(total/10)===total/10) {//Total is multiple of 10
 		return 0
 	}
 	else {
@@ -212,6 +214,14 @@ function mod(divisee,base) {
 	return Math.round(divisee - (Math.floor(divisee/base)*base));
 }
 
+
+
+// Checks if the barcode includes a check digit
+function validateCheckDigit(barcode) {
+	const lastIdx = barcode.length-1;
+	return calculateCheckDigit(barcode.slice(0, lastIdx))==barcode[lastIdx];// use == since we are comparing a string to a number
+}
+
 function normalizeUpc(upc, opts={}) {
 	if (opts.checkDigit) {
 		upc = `${upc}${calculateCheckDigit(upc)}`;
@@ -222,10 +232,82 @@ function normalizeUpc(upc, opts={}) {
 	return upc;
 }
 
-// Checks if the barcode includes a check digit
-function validateCheckDigit(barcode) {
-	const lastIdx = barcode.length-1;
-	return calculateCheckDigit(barcode.slice(0, lastIdx))==barcode[lastIdx];// use == since we are comparing a string to a number
+function normalizeUpcA(upc) {
+	if(upc.length===8 || upc.length===7) {
+		return convertUpcE2A(normalizeUpcE(upc));
+	}
+	else if(upc.length===12 && validateCheckDigit(upc)) {
+		return upc;
+	}
+	else if(upc.length===11) {
+		return upc + calculateCheckDigit(upc);
+	}
+	else { //weird length
+		return null;
+	}
+}
+
+// function normalizeUpcE(upc) {
+// 	if(upc.length == 8 && validateCheckDigit(upc)) {
+// 		return upc;
+// 	}
+	
+// 	if (upc.length > 7) {
+// 		while(upc[0]=='0' && upc.length > 7) {
+// 			upc = upc.slice(1,upc.length);
+// 		}
+// 	}
+
+// 	if(upc.length == 7) {
+// 		return upc + calculateCheckDigit(upc);
+// 	}
+
+// 	return null;
+// }
+
+function normalizeUpcE(upc) {
+	return normalizingFn(upc, 8);
+}
+
+function normalizeUpcA(upc) {
+	if(upc.length===8 || upc.length===7) {
+		return convertUpcE2A(normalizeUpcE(upc));
+	}
+	else {
+		return normalizingFn(upc, 12);
+	}
+}
+
+function normalizeEan13(ean) {
+
+}
+
+function normalizingFn(barcode, standardLength) {
+	if (barcode.length == standardLength && validateCheckDigit(barcode)) {
+		return barcode
+	}
+	while(barcode[0]=='0' && barcode.length > standardLength-1) {
+		barcode = barcode.slice(1,barcode.length);
+	}
+	if(barcode.length == standardLength-1) {
+		return barcode + calculateCheckDigit(barcode);
+	}
+	return null;
+}
+
+function normalizeBarcodeByType(barcode, type) {
+	if(type.match(/upca/i) || type.match(/upc12/i) || type.toLowerCase()==='upc') {
+		return normalizeUpcA(barcode);
+	}
+	else if(type.match(/ean13/i) || type.toLowerCae()==='ean') {
+		return normalizeEan(barcode);
+	}
+	else if(type.match(/upce/i) || type.match(/upc8/i)) {
+		return normalizeUpcE(barcode)
+	}
+	else {// type not recognized
+		return null;
+	}
 }
 
 module.exports = {
@@ -237,6 +319,10 @@ module.exports = {
 	isUpcE: isUpcE,
 	convertUpcE2A: convertUpcE2A,
 	calculateCheckDigit: calculateCheckDigit,
-	normalizeUpc: normalizeUpc,
 	validateCheckDigit: validateCheckDigit,
+	normalizeUpc: normalizeUpc,
+	normalizeBarcodeByType: normalizeBarcodeByType,
+	normalizeUpcA: normalizeUpcA,
+	normalizeUpcE: normalizeUpcE,
+	normalizeEan13:	normalizeEan13,
 }
