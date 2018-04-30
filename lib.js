@@ -279,16 +279,29 @@ function normalizeUpcA(upc) {
 }
 
 function normalizeEan13(ean) {
-
+	return normalizingFn(ean, 13);
 }
 
 function normalizingFn(barcode, standardLength) {
-	if (barcode.length == standardLength && validateCheckDigit(barcode)) {
-		return barcode
+	// if valid check digit, adjust length by clipping leading zeros if necessary to get get correct length. return null if can't get correct length
+	if(validateCheckDigit(barcode)) {// This validates regardless of standards length
+		// trim any unnecessary leading zeros
+		while(barcode[0]=='0' && barcode.length > standardLength) {
+			barcode = barcode.slice(1,barcode.length);
+		}
+		if (barcode.length == standardLength) {// if correct length now
+			return barcode
+		}
+		else { // if still incorrect length
+			return null;
+		}
 	}
+
+	// Trim leading zeros up to to one less than correct length 
 	while(barcode[0]=='0' && barcode.length > standardLength-1) {
 		barcode = barcode.slice(1,barcode.length);
 	}
+	// if it's now the right length for a check digit to be added
 	if(barcode.length == standardLength-1) {
 		return barcode + calculateCheckDigit(barcode);
 	}
@@ -299,8 +312,8 @@ function normalizeBarcodeByType(barcode, type) {
 	if(type.match(/upca/i) || type.match(/upc12/i) || type.toLowerCase()==='upc') {
 		return normalizeUpcA(barcode);
 	}
-	else if(type.match(/ean13/i) || type.toLowerCae()==='ean') {
-		return normalizeEan(barcode);
+	else if(type.match(/ean13/i) || type.toLowerCase()==='ean') {
+		return normalizeEan13(barcode);
 	}
 	else if(type.match(/upce/i) || type.match(/upc8/i)) {
 		return normalizeUpcE(barcode)
