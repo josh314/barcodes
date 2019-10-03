@@ -232,20 +232,20 @@ function normalizeUpc(upc, opts={}) {
 	return upc;
 }
 
-function normalizeUpcA(upc) {
-	if(upc.length===8 || upc.length===7) {
-		return convertUpcE2A(normalizeUpcE(upc));
-	}
-	else if(upc.length===12 && validateCheckDigit(upc)) {
-		return upc;
-	}
-	else if(upc.length===11) {
-		return upc + calculateCheckDigit(upc);
-	}
-	else { //weird length
-		return null;
-	}
-}
+// function normalizeUpcA(upc) {
+// 	if(upc.length===8 || upc.length===7) {
+// 		return convertUpcE2A(normalizeUpcE(upc));
+// 	}
+// 	else if(upc.length===12 && validateCheckDigit(upc)) {
+// 		return upc;
+// 	}
+// 	else if(upc.length===11) {
+// 		return upc + calculateCheckDigit(upc);
+// 	}
+// 	else { //weird length
+// 		return null;
+// 	}
+// }
 
 // function normalizeUpcE(upc) {
 // 	if(upc.length == 8 && validateCheckDigit(upc)) {
@@ -283,8 +283,8 @@ function normalizeEan13(ean) {
 }
 
 function normalizingFn(barcode, standardLength) {
-	// if valid check digit, adjust length by clipping leading zeros if necessary to get get correct length. return null if can't get correct length
-	if(validateCheckDigit(barcode)) {// This validates regardless of standards length
+
+	if(validateCheckDigit(barcode) && barcode.length >= standardLength) {
 		// trim any unnecessary leading zeros
 		while(barcode[0]=='0' && barcode.length > standardLength) {
 			barcode = barcode.slice(1,barcode.length);
@@ -292,12 +292,14 @@ function normalizingFn(barcode, standardLength) {
 		if (barcode.length == standardLength) {// if correct length now
 			return barcode
 		}
-		else { // if still incorrect length
-			return null;
-		}
 	}
 
-	// Trim leading zeros up to to one less than correct length 
+	// if too short, add leading zeros up to to one less than correct length 
+	while(barcode.length < standardLength-1) {
+		barcode = '0' + barcode;
+	}
+
+	// if too long and have leading zeros, Trim leading zeros up to to one less than correct length 
 	while(barcode[0]=='0' && barcode.length > standardLength-1) {
 		barcode = barcode.slice(1,barcode.length);
 	}
@@ -337,5 +339,6 @@ module.exports = {
 	normalizeBarcodeByType: normalizeBarcodeByType,
 	normalizeUpcA: normalizeUpcA,
 	normalizeUpcE: normalizeUpcE,
-	normalizeEan13:	normalizeEan13,
+  normalizeEan13:	normalizeEan13,
+  normalizingFn: normalizingFn
 }
