@@ -222,6 +222,10 @@ function validateCheckDigit(barcode) {
 	return calculateCheckDigit(barcode.slice(0, lastIdx))==barcode[lastIdx];// use == since we are comparing a string to a number
 }
 
+function addCheckDigit(barcode) {
+  return barcode + calculateCheckDigit(barcode);
+}
+
 function normalizeUpc(upc, opts={}) {
 	if (opts.checkDigit) {
 		upc = `${upc}${calculateCheckDigit(upc)}`;
@@ -332,7 +336,8 @@ module.exports = {
 	isEhskuFormat: isEhskuFormat,
 	getEhskuFromUpc: getEhskuFromUpc,
 	isUpcE: isUpcE,
-	convertUpcE2A: convertUpcE2A,
+  convertUpcE2A: convertUpcE2A,
+  addCheckDigit: addCheckDigit,
 	calculateCheckDigit: calculateCheckDigit,
 	validateCheckDigit: validateCheckDigit,
 	normalizeUpc: normalizeUpc,
