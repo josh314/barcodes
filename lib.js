@@ -222,7 +222,16 @@ function validateCheckDigit(barcode) {
 	return calculateCheckDigit(barcode.slice(0, lastIdx))==barcode[lastIdx];// use == since we are comparing a string to a number
 }
 
+const isDigit = c => ('0123456789'.split('')).includes(c);
+const isNumericString = s => s.split('').every(isDigit);
+
 function addCheckDigit(barcode) {
+
+  // return unaltered barcode if not a numeric string
+  if( !barcode || !isNumericString( barcode ) ) {
+    return barcode;
+  }
+
   return barcode + calculateCheckDigit(barcode);
 }
 
