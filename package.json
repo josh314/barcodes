@@ -1,7 +1,6 @@
 {
-  "name": "barcodes",
-  "version": "2.0.0",
-  "private": true,
+  "name": "@wazue/barcodes",
+  "version": "2.0.1",
   "main": "lib.js",
   "scripts": {
     "start": "node demo.js",
