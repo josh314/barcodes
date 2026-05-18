@@ -4,6 +4,10 @@
   "private": true,
   "main": "lib.js",
   "scripts": {
-    "start": "node demo.js"
+    "start": "node demo.js",
+    "test": "node test.js"
+  },
+  "publishConfig": {
+    "@wazue:registry": "https://gitlab.com/api/v4/projects/63112323/packages/npm/"
   }
 }
