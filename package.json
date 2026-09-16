@@ -1,12 +1,37 @@
 {
   "name": "@wazue/barcodes",
-  "version": "2.0.1",
-  "main": "lib.js",
+  "version": "2.1.0",
+  "main": "dist/lib.js",
+  "exports": {
+    ".": {
+      "types": "./dist/lib.d.ts",
+      "import": "./dist/lib.js",
+      "require": "./dist/lib.js"
+    },
+    "./lib": {
+      "types": "./dist/lib.d.ts",
+      "import": "./dist/lib.js",
+      "require": "./dist/lib.js"
+    }
+  },
+  "types": "dist/lib.d.ts",
+  "files": [
+    "dist"
+  ],
+  "type": "commonjs",
   "scripts": {
-    "start": "node demo.js",
-    "test": "node test.js"
+    "build": "tsc",
+    "test": "jest"
   },
   "publishConfig": {
     "@wazue:registry": "https://gitlab.com/api/v4/projects/63112323/packages/npm/"
+  },
+  "prePublishOnly": "npm run build",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.6.0",
+    "jest": "^30.5.1",
+    "ts-jest": "^29.4.12",
+    "typescript": "^6.0.3"
   }
 }

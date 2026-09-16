@@ -1,1 +1,5 @@
+# NPM configuration files
 .npmrc
+
+# Directory for distribution files
+dist/
