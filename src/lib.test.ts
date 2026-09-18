@@ -1,4 +1,4 @@
-import { describe, it, expect, test } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 
 import * as barcodes from './lib';
 

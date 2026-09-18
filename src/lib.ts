@@ -164,13 +164,6 @@ function calculateCheckDigit( upc: string ): string {
   return res.toString();
 }
 
-function isEven( y: number ): boolean {
-	return ( y % 2 ) ? false : true;
-}
-function isOdd( y: number ): boolean {
-	return !isEven(y);
-}
-
 // Checks if the barcode includes a check digit
 function validateCheckDigit( barcode: string ) {
 	const lastIdx = barcode.length-1;
