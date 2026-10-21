@@ -1,6 +1,6 @@
 # @wazue/barcodes
 
-Utility functions for validating, normalizing, and converting UPC/EAN barcodes and EHSKUs. Written in TypeScript, compiled to CommonJS — requireable from plain Node.
+Utility functions for validating, normalizing, and converting UPC/EAN/GTIN barcodes. Written in TypeScript, compiled to CommonJS — requireable from plain Node.
 
 ## Install
 
